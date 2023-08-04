@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "chatgpt_ui_server/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "chatgpt_ui_server/wsgi.py"
+      }
+    ]
+}
