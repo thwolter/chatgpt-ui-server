@@ -17,6 +17,8 @@ import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
+import pymysql
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -93,9 +95,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chatgpt_ui_server.wsgi.application'
 
+# Fake PyMySQL's version and install as MySQLdb
+# https://adamj.eu/tech/2020/02/04/how-to-use-pymysql-with-django/
+pymysql.version_info = (1, 4, 2, "final", 0)
+pymysql.install_as_MySQLdb()
+
+
 db_config = dj_database_url.config(default='sqlite:///db.sqlite3')
 if db_config.get('ENGINE') == 'django.db.backends.mysql':
-    db_config['OPTIONS'] = {'charset': 'utf8mb4'}
+    db_config['OPTIONS'] = {
+        'charset': 'utf8mb4',
+        'ssl': {'ca': os.environ.get('MYSQL_ATTR_SSL_CA')}
+    }
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
